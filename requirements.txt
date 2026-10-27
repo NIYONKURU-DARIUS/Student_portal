@@ -1,0 +1,4 @@
+django>=4.2
+quickgraph-darius12>=0.1.0
+matplotlib>=3.5.0
+pillow>=9.0.0

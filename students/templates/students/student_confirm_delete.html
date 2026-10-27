@@ -1,0 +1,36 @@
+{% extends 'students/base.html' %}
+
+{% block title %}Confirm Delete - Student Portal{% endblock %}
+
+{% block content %}
+<div class="delete-box">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="delete-title">Confirm Deletion</h2>
+            <p style="color: var(--text-muted);">
+                Are you sure you want to permanently delete this student record?
+            </p>
+
+            <div class="delete-preview">
+                <div style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">
+                    {{ student.first_name }} {{ student.last_name }}
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.25rem;">
+                    {{ student.email }} &bull; {{ student.course }}
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-block" style="margin-bottom: 0.6rem;">
+                    Yes, Delete Record
+                </button>
+            </form>
+            
+            <a href="{% url 'student_list' %}" class="btn btn-outline btn-block" style="text-align: center;">
+                Cancel
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

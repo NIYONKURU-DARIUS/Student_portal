@@ -1,0 +1,124 @@
+{% extends 'students/base.html' %}
+
+{% block title %}Student Directory - Student Portal{% endblock %}
+
+{% block content %}
+<!-- Header Bar -->
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Student Records Directory</h1>
+        <p class="page-subtitle">Manage student profiles, performance records, and visual analytics.</p>
+    </div>
+    <div style="display: flex; gap: 0.6rem; align-items: center;">
+        <a href="{% url 'analytics_dashboard' %}" class="btn btn-outline">
+            View QuickGraphs
+        </a>
+        {% if is_instructor %}
+        <a href="{% url 'student_create' %}" class="btn btn-primary">
+            + Add New Student
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 4 Key Statistics Cards -->
+<div class="grid-4">
+    <div class="stat-card" style="border-left-color: var(--primary);">
+        <div class="stat-label">Total Students</div>
+        <div class="stat-value" style="color: var(--primary);">{{ total_count }}</div>
+    </div>
+    <div class="stat-card" style="border-left-color: var(--success);">
+        <div class="stat-label">Average Grade</div>
+        <div class="stat-value" style="color: var(--success);">{{ avg_grade }}%</div>
+    </div>
+    <div class="stat-card" style="border-left-color: var(--warning);">
+        <div class="stat-label">Avg Weekly Study</div>
+        <div class="stat-value" style="color: var(--warning);">{{ avg_study_hours }} hrs</div>
+    </div>
+    <div class="stat-card" style="border-left-color: #6366f1;">
+        <div class="stat-label">Top Score</div>
+        <div class="stat-value" style="color: #6366f1;">{{ top_grade }}%</div>
+    </div>
+</div>
+
+<!-- Search and Filtering Form -->
+<form method="GET" class="filter-bar">
+    <input type="text" name="q" class="filter-input form-control" placeholder="Search by name or email..." value="{{ query }}">
+    
+    <select name="course" class="filter-select form-select" onchange="this.form.submit()">
+        <option value="">-- All Courses --</option>
+        {% for code, name in courses %}
+            <option value="{{ code }}" {% if selected_course == code %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-secondary btn-sm">Filter</button>
+    {% if query or selected_course %}
+        <a href="{% url 'student_list' %}" class="btn btn-outline btn-sm">Clear</a>
+    {% endif %}
+</form>
+
+<!-- Student Records Table -->
+<div class="table-wrapper">
+    <table class="portal-table">
+        <thead>
+            <tr>
+                <th style="width: 50px;">#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Grade</th>
+                <th>Study Hours</th>
+                <th>Registered Date</th>
+                <th style="text-align: center; width: 140px;">
+                    {% if is_instructor %}Actions{% else %}Access Level{% endif %}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td style="color: var(--text-muted); font-weight: 600;">#{{ student.id }}</td>
+                <td style="font-weight: 600;">{{ student.first_name }} {{ student.last_name }}</td>
+                <td><a href="mailto:{{ student.email }}">{{ student.email }}</a></td>
+                <td><span class="badge badge-gray">{{ student.course }}</span></td>
+                <td><span class="badge {{ student.status_badge }}">{{ student.grade }}%</span></td>
+                <td>{{ student.study_hours_per_week }} hrs/wk</td>
+                <td style="color: var(--text-muted); font-size: 0.88rem;">{{ student.registration_date }}</td>
+                <td style="text-align: center;">
+                    {% if is_instructor %}
+                        <div class="btn-group">
+                            <a href="{% url 'student_update' student.id %}" class="btn btn-warning btn-sm" title="Edit">
+                                Edit
+                            </a>
+                            <a href="{% url 'student_delete' student.id %}" class="btn btn-danger btn-sm" title="Delete">
+                                Delete
+                            </a>
+                        </div>
+                    {% else %}
+                        <span class="badge badge-gray" title="Students have read-only privileges">Read-Only</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                    <div style="font-size: 1.15rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main);">
+                        No students found.
+                    </div>
+                    {% if is_instructor %}
+                        <p style="margin-bottom: 1.25rem;">Get started by registering a student or load initial demo data.</p>
+                        <div style="display: inline-flex; gap: 0.6rem;">
+                            <a href="{% url 'student_create' %}" class="btn btn-primary btn-sm">Register Student</a>
+                            <a href="{% url 'seed_sample_data' %}" class="btn btn-outline btn-sm">Load Demo Students</a>
+                        </div>
+                    {% else %}
+                        <p>No student records are currently available. Please contact your instructor.</p>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

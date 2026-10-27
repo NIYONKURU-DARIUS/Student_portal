@@ -1,0 +1,81 @@
+{% extends 'students/base.html' %}
+
+{% block title %}Sign In - Student Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 440px; margin: 3rem auto;">
+    <div class="card" style="padding: 2.25rem; border-top: 4px solid var(--primary);">
+        <div style="text-align: center; margin-bottom: 1.75rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎓</div>
+            <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">
+                Portal Authentication
+            </h1>
+            <p style="color: var(--text-muted); font-size: 0.88rem;">
+                Sign in to access your role-based dashboard.
+            </p>
+        </div>
+
+        {% if form.errors %}
+        <div style="background-color: var(--danger-soft); border: 1px solid var(--danger); color: var(--danger); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.88rem;">
+            <strong>Authentication failed:</strong> Please check your username and password.
+        </div>
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+            <div style="background-color: var(--primary-soft); border: 1px solid var(--primary); color: var(--primary); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.88rem;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label for="id_username" class="form-label" style="display: block; font-weight: 600; margin-bottom: 0.4rem;">
+                    Username
+                </label>
+                <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter username" required autofocus>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="id_password" class="form-label" style="display: block; font-weight: 600; margin-bottom: 0.4rem;">
+                    Password
+                </label>
+                <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem; font-size: 0.95rem;">
+                Sign In
+            </button>
+        </form>
+
+        <!-- Demo Accounts Quick Fill -->
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+            <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.75rem; text-align: center;">
+                Quick Test Accounts
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="fillCredentials('instructor1', 'instructor123')" style="justify-content: space-between; font-size: 0.82rem; padding: 0.5rem 0.75rem;">
+                    <span>👨‍🏫 <strong>Instructor</strong> (Full CRUD &amp; Analytics)</span>
+                    <span style="color: var(--text-light);">auto-fill</span>
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="fillCredentials('student1', 'student123')" style="justify-content: space-between; font-size: 0.82rem; padding: 0.5rem 0.75rem;">
+                    <span>🧑‍🎓 <strong>Student</strong> (Read-Only Directory &amp; Analytics)</span>
+                    <span style="color: var(--text-light);">auto-fill</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function fillCredentials(user, pass) {
+    document.getElementById('id_username').value = user;
+    document.getElementById('id_password').value = pass;
+}
+</script>
+{% endblock %}

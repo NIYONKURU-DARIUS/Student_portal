@@ -1,0 +1,92 @@
+{% extends 'students/base.html' %}
+
+{% block title %}{{ action }} Student - Student Portal{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);">
+                    {{ action }} Student
+                </h2>
+                <small style="color: var(--text-muted);">Fill in the academic details below</small>
+            </div>
+            <span class="badge badge-primary">{{ action }}</span>
+        </div>
+
+        <div class="card-body">
+            <form method="POST" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div style="background-color: var(--danger-soft); border: 1px solid #fecaca; color: var(--danger); padding: 0.75rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                        <div class="form-error">{{ form.first_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        <div class="form-error">{{ form.last_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="form-error">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Course / Department</label>
+                    {{ form.course }}
+                    {% if form.course.errors %}
+                        <div class="form-error">{{ form.course.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Grade (%)</label>
+                        {{ form.grade }}
+                        {% if form.grade.errors %}
+                            <div class="form-error">{{ form.grade.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Weekly Study Hours</label>
+                        {{ form.study_hours_per_week }}
+                        {% if form.study_hours_per_week.errors %}
+                            <div class="form-error">{{ form.study_hours_per_week.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success btn-block">
+                        Save Student Record
+                    </button>
+                    <a href="{% url 'student_list' %}" class="btn btn-outline btn-block" style="text-align: center;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

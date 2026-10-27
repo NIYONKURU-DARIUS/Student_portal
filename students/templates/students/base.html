@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Portal{% endblock %}</title>
+    <!-- Pure Vanilla CSS Stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar">
+        <div class="container nav-wrapper">
+            <a class="brand" href="{% url 'student_list' %}">
+                <img src="{% static 'images/logo.svg' %}" alt="Portal Logo" width="32" height="32" class="portal-logo-img">
+                <span>Student<span class="brand-accent">Portal</span></span>
+            </a>
+            
+            <ul class="nav-links">
+                {% if user.is_authenticated %}
+                    <li>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'student_list' %}active{% endif %}" href="{% url 'student_list' %}">
+                            Directory
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'analytics_dashboard' %}active{% endif %}" href="{% url 'analytics_dashboard' %}">
+                            Analytics &amp; Graphs
+                        </a>
+                    </li>
+                    
+                    {% if is_instructor %}
+                    <li>
+                        <a class="btn btn-primary btn-sm" href="{% url 'student_create' %}">
+                            + Add Student
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <!-- User Identity & Role Badge -->
+                    <li style="display: flex; align-items: center; gap: 0.5rem; margin-left: 0.75rem; padding-left: 0.75rem; border-left: 1px solid var(--border);">
+                        <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-main);">
+                            {{ user.username }}
+                        </span>
+                        {% if user_role == 'Admin' %}
+                            <span class="badge badge-danger">Admin</span>
+                        {% elif user_role == 'Instructor' %}
+                            <span class="badge badge-primary">Instructor</span>
+                        {% else %}
+                            <span class="badge badge-gray">Student</span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a class="btn btn-outline btn-sm" href="{% url 'logout' %}" title="Sign out of your account">
+                            Sign Out
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a class="btn btn-primary btn-sm" href="{% url 'login' %}">
+                            Sign In
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><strong>Student Academic &amp; Performance Portal</strong> &bull; Python Frameworks</p>
+            <p style="margin-top: 0.25rem; font-size: 0.8rem; color: #94a3b8;">
+                Built with Pure Plain CSS &amp; <code>quickgraph-darius12</code>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Pure Static JavaScript -->
+    <script src="{% static 'js/portal.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

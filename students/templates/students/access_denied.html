@@ -1,0 +1,53 @@
+{% extends 'students/base.html' %}
+
+{% block title %}Access Denied - Student Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 650px; margin: 3rem auto; text-align: center;">
+    <div class="card" style="padding: 2.5rem; border-top: 4px solid var(--danger);">
+        <div style="font-size: 3.5rem; margin-bottom: 1rem;">🔒</div>
+        
+        <h1 style="font-size: 1.75rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">
+            Access Restricted
+        </h1>
+        
+        <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem;">
+            You do not have permission to access <code>{{ attempted_action }}</code>.
+        </p>
+
+        <div style="background-color: var(--bg-page); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.75rem; text-align: left;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+                <span style="font-weight: 600; color: var(--text-muted);">Your Current Role:</span>
+                <div>
+                    {% for role in user_roles %}
+                        <span class="badge badge-gray">{{ role }}</span>
+                    {% empty %}
+                        <span class="badge badge-gray">Student / Viewer</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="font-weight: 600; color: var(--text-muted);">Required Role(s):</span>
+                <div>
+                    {% for req in required_roles %}
+                        <span class="badge badge-danger">{{ req }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.75rem;">
+            As a student or viewer, you have read-only access to directory records and performance analytics. To add, edit, or delete records, please log in with an <strong>Instructor</strong> or <strong>Admin</strong> account.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 0.75rem;">
+            <a href="{% url 'student_list' %}" class="btn btn-outline">
+                &larr; Back to Directory
+            </a>
+            <a href="{% url 'logout' %}" class="btn btn-primary">
+                Switch Account
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

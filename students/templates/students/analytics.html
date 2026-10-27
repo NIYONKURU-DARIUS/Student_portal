@@ -1,0 +1,119 @@
+{% extends 'students/base.html' %}
+
+{% block title %}QuickGraphs Analytics - Student Portal{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <div>
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <h1 class="page-title">Academic Analytics &amp; Visualizations</h1>
+            <span class="badge badge-primary">quickgraph-darius12</span>
+        </div>
+        <p class="page-subtitle">
+            All 4 visual graph types rendered from database records using your TestPyPI package.
+        </p>
+    </div>
+    <div style="display: flex; gap: 0.6rem;">
+        <a href="{% url 'analytics_dashboard' %}" class="btn btn-outline">
+            Re-generate Graphs
+        </a>
+        <a href="{% url 'student_list' %}" class="btn btn-primary">
+            Back to Directory
+        </a>
+    </div>
+</div>
+
+{% if not graphs_data %}
+<div class="card" style="text-align: center; padding: 3rem 1rem;">
+    <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">No Student Data Available</h3>
+    <p style="color: var(--text-muted); margin-bottom: 1.25rem;">
+        Register students with courses, grades, and study hours to generate all 4 visual graphs.
+    </p>
+    <div style="display: inline-flex; justify-content: center; gap: 0.6rem;">
+        <a href="{% url 'student_create' %}" class="btn btn-primary btn-sm">Add New Student</a>
+        <a href="{% url 'seed_sample_data' %}" class="btn btn-outline btn-sm">Load Demo Students</a>
+    </div>
+</div>
+{% else %}
+
+<!-- 4 Graphs Grid in Pure CSS -->
+<div class="grid-2">
+    <!-- 1. Pie Graph -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">
+                    Course Enrollment Share
+                </h3>
+                <small style="color: var(--text-muted);">quickgraph.graphs.pie_graph()</small>
+            </div>
+            <span class="badge badge-primary">Pie Graph</span>
+        </div>
+        <div class="card-body graph-img-wrapper">
+            <img src="{{ graphs_data.pie_url }}?v={{ cache_buster }}" alt="Course Distribution Pie Graph" class="graph-card-img">
+        </div>
+        <div class="card-footer">
+            Displays proportion and percentage of students registered across each course.
+        </div>
+    </div>
+
+    <!-- 2. Bar Graph -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">
+                    Average Grade by Course
+                </h3>
+                <small style="color: var(--text-muted);">quickgraph.graphs.bar_graph()</small>
+            </div>
+            <span class="badge badge-success">Bar Graph</span>
+        </div>
+        <div class="card-body graph-img-wrapper">
+            <img src="{{ graphs_data.bar_url }}?v={{ cache_buster }}" alt="Average Grade Bar Graph" class="graph-card-img">
+        </div>
+        <div class="card-footer">
+            Benchmarks the mean percentage mark achieved across each field of study.
+        </div>
+    </div>
+
+    <!-- 3. Scatter Graph -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">
+                    Study Hours vs. Grade
+                </h3>
+                <small style="color: var(--text-muted);">quickgraph.graphs.scatter_graph()</small>
+            </div>
+            <span class="badge badge-warning">Scatter Graph</span>
+        </div>
+        <div class="card-body graph-img-wrapper">
+            <img src="{{ graphs_data.scatter_url }}?v={{ cache_buster }}" alt="Study Hours vs Grade Scatter Graph" class="graph-card-img">
+        </div>
+        <div class="card-footer">
+            Plots weekly study hours on X-axis against student marks on Y-axis.
+        </div>
+    </div>
+
+    <!-- 4. Line Graph -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main);">
+                    Performance Progression
+                </h3>
+                <small style="color: var(--text-muted);">quickgraph.graphs.line_graph()</small>
+            </div>
+            <span class="badge badge-danger">Line Graph</span>
+        </div>
+        <div class="card-body graph-img-wrapper">
+            <img src="{{ graphs_data.line_url }}?v={{ cache_buster }}" alt="Performance Trend Line Graph" class="graph-card-img">
+        </div>
+        <div class="card-footer">
+            Illustrates academic progression across registered student records.
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
